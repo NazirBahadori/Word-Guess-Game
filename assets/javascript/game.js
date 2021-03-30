@@ -1,9 +1,6 @@
 $(document).ready(function() {
 
-    var possibleWords = ["florence", "paris", "madrid", "rome", "singapore", "dubai", "new york city", 
-                            "shanghai", "london", "tokyo", "sydney", "toronto", "beijing", "moscow",
-                            "johannesburg", "istanbul", "warsaw", "jakarta", "kuala lumpur", "mexico city",
-                            "hong kong", "chicago", "seoul", "los angeles", "mumbai"]
+    var possibleWords = ["apple", "banana", "orange", "pear"]
 
     const maxGuess = 10
     var pauseGame = false
@@ -15,17 +12,11 @@ $(document).ready(function() {
     var wins = 0
 
     resetGame()
-
-    // Wait for key press
     document.onkeypress = function(event) {
-        // Make sure key pressed is an alpha character
         if (isAlpha(event.key) && !pauseGame) {
             checkForLetter(event.key.toUpperCase())
         }
     }
-
-    // Game Functions
-    // Check if letter is in word & process
     function checkForLetter(letter) {
         var foundLetter = false
         var correctSound = document.createElement("audio")
@@ -33,15 +24,12 @@ $(document).ready(function() {
         correctSound.setAttribute("src", "https://s3-us-west-2.amazonaws.com/s.cdpn.io/74196/goodbell.mp3")
         incorrectSound.setAttribute("src","assets/sounds/stairs.mp3")
 
-        // Search string for letter
         for (var i=0, j= wordToMatch.length; i<j; i++) {
             if (letter === wordToMatch[i]) {
                 guessingWord[i] = letter
                 foundLetter = true
                 correctSound.play()
-                // If guessing word matches random word
                 if (guessingWord.join("") === wordToMatch) {
-                    // Increment # of wins
                     wins++
                     pauseGame = true
                     updateDisplay()
@@ -52,15 +40,11 @@ $(document).ready(function() {
 
         if (!foundLetter) {
             incorrectSound.play()
-            // Check if inccorrect guess is already on the list
             if (!guessedLetters.includes(letter)) {
-                // Add incorrect letter to guessed letter list
                 guessedLetters.push(letter)
-                // Decrement the number of remaining guesses
                 numGuess--
             }
             if (numGuess === 0) {
-                // Display word before reseting game
                 guessingWord = wordToMatch.split()
                 pauseGame = true
                 setTimeout(resetGame, 5000)
@@ -70,7 +54,6 @@ $(document).ready(function() {
         updateDisplay()
 
     }
-    // Check in keypressed is between A-Z or a-z
     function isAlpha (ch){
         return /^[A-Z]$/i.test(ch);
     }
@@ -79,17 +62,13 @@ $(document).ready(function() {
         numGuess = maxGuess
         pauseGame = false
 
-        // Get a new word
         wordToMatch = possibleWords[Math.floor(Math.random() * possibleWords.length)].toUpperCase()
         console.log(wordToMatch)
 
-        // Reset word arrays
         guessedLetters = []
         guessingWord = []
 
-        // Reset the guessed word
         for (var i=0, j=wordToMatch.length; i < j; i++){
-            // Put a space instead of an underscore between multi word "words"
             if (wordToMatch[i] === " ") {
                 guessingWord.push(" ")
             } else {
@@ -97,7 +76,6 @@ $(document).ready(function() {
             }
         }
 
-        // Update the Display
         updateDisplay()
     }
 
